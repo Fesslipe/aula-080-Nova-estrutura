@@ -1,16 +1,50 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Flasky{% endblock %}
+{% block title %}Avaliação contínua: Aula 080{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    <h1>Avaliação contínua: <span>Aula 080</span></h1>
+    <nav>
+        <a href="{{ url_for('main.index') }}">Home</a>
+    </nav>
+</div>
+
+<div>
+    <h2>Olá, {% if name %}{{ name }}{% else %}Desconhecido{% endif %}!</h2>
     {% if not known %}
-    <p>Pleased to meet you!</p>
+    <p>Prazer em conhecê-lo!</p>
     {% else %}
-    <p>Happy to see you again!</p>
+    <p>Que bom vê-lo novamente!</p>
     {% endif %}
 </div>
-{{ wtf.quick_form(form) }}
+
+<p>E-mail enviado para o <strong>Administrador do sistema</strong>, notificando o cadastro de um novo usuário.</p>
+
+<!-- Adicionando o formulário -->
+<form method="POST" action="{{ url_for('main.index') }}">
+    {{ form.hidden_tag() }}  <!-- Inclui o token CSRF -->
+    {{ wtf.form_field(form.name) }}
+    {{ wtf.form_field(form.role) }}
+    {{ wtf.form_field(form.submit) }}
+</form>
+
+<h3>Relação de usuários cadastrados</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome do usuário</th>
+            <th>Função</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
